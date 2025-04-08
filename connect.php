@@ -7,22 +7,34 @@ session_start();
 $msg = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $email = $_POST['email'];
-    $passwd = $_POST['passwd'];
-    $etudiant = authStudent($email, $passwd);
+    $email = trim($_POST['email']);
+    $passwd = trim($_POST['passwd']);
 
-    if ($etudiant != null) {
-        $_SESSION['etudiant_connecte'] = $etudiant;
+    // Vérification de l'email
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $msg = "Adresse email invalide.";
+    } 
+    // Vérification du mot de passe : longueur entre 6 et 25 caractères
+    elseif (!preg_match("/^.{6,25}$/", $passwd)) {
+        $msg = "Le mot de passe doit contenir entre 6 et 25 caractères.";
+    } 
+    else {
+        // Authentification
+        $etudiant = authStudent($email, $passwd);
 
-        // Rediriger selon le statut
-        if ($etudiant->getStatut() == 0) {  
-            header("Location: prof-dashboard.php");
-        } else {  
-            header("Location: etudiants-index.php");
+        if ($etudiant !== null) {
+            $_SESSION['etudiant_connecte'] = $etudiant;
+
+            // Rediriger selon le statut
+            if ($etudiant->getStatut() == 0) {
+                header("Location: prof-dashboard.php");
+            } else {
+                header("Location: etudiants-index.php");
+            }
+            exit();
+        } else {
+            $msg = "Identifiants incorrects.";
         }
-        exit(); 
-    } else {
-        $msg = "Identifiants incorrects.";
     }
 }
 ?>

@@ -15,7 +15,7 @@ if (!$etud) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $password= password_hash($_POST['passwd'],  PASSWORD_DEFAULT) ;
+    $password= password_hash($_POST['passwd'],  PASSWORD_DEFAULT) ;//cacher le mots de passe hash pour les modifications 
     $etud->setNom($_POST['nom'])
          ->setPrenom($_POST['prenom'])
          ->setTitre($_POST['titre'])
@@ -79,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <label>Statut</label>
     <select name="statut">
-        <option value="1" <?= $etud->getStatut() == 1 ? 'selected' : '' ?>>Actif</option>
+        <option value="1" <?= $etud->getStatut() == 1 ? 'selected' : '' ?>>Actif </option>
         <option value="0" <?= $etud->getStatut() == 0 ? 'selected' : '' ?>>Inactif</option>
     </select>
 
